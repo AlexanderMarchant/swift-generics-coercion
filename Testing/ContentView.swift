@@ -41,11 +41,11 @@ struct ContentView: View {
                     VStack(spacing: 5)
                     {
                         Text(result.t.name)
-                        if let folder = (result.t as? FolderProtocol)
+                        if let folder = (result.t as? Folder)
                         {
                             Text("Children: \(folder.numberOfChildren)")
                         }
-                        else if let file = (result.t as? FileProtocol)
+                        else if let file = (result.t as? File)
                         {
                             Text("Extension: \(file.ext)")
                         }
@@ -68,11 +68,11 @@ struct ContentView: View {
     
     func handleTap(result: AnySearchResult)
     {
-        if let folder = result.t as? FolderProtocol
+        if let folder = result.t as? Folder
         {
             print("I am a folder: \(folder.numberOfChildren)")
         }
-        else if let file = result.t as? FileProtocol
+        else if let file = result.t as? File
         {
             print("I am a file: \(file.ext)")
         }
