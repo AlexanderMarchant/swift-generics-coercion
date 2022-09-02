@@ -7,35 +7,55 @@
 
 import Foundation
 
-protocol ItemProtocol {
+protocol ItemProtocol: Identifiable {
     var name: String { get }
 }
 
-class Folder: ItemProtocol {
-    
+class AnyItem: ItemProtocol
+{
+    // MARK: ItemProtocol Conformance
     var name: String
+    
+    init(name: String)
+    {
+        self.name = name
+    }
+}
+
+class Folder: AnyItem {
     
     var numberOfChildren: Int
     
     init(name: String, numberOfChildren: Int)
     {
-        self.name = name
         self.numberOfChildren = numberOfChildren
+        super.init(name: name)
     }
     
 }
-class File: ItemProtocol {
+
+class File: AnyItem {
     
-    // MARK: ItemProtocol Conformance
-    var name: String
-    
-    // MARK: FileProtocol Conformance
     var ext: String
     
     init(name: String, ext: String)
     {
-        self.name = name
         self.ext = ext
+        super.init(name: name)
+    }
+}
+
+@objc extension NSDictionary
+{
+    func stringForKey(_ key: String) -> String?
+    {
+        self[key] as? String
+    }
+}
+extension NSDictionary: ItemProtocol
+{
+    var name: String {
+        self.stringForKey("NAME")!
     }
 }
 

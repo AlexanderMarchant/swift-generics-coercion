@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class SearchResult<T> {
+class SearchResult<T: ItemProtocol> {
     var t: T
 
     init(t: T) {
@@ -15,19 +15,9 @@ class SearchResult<T> {
     }
 }
 
-struct AnySearchResult {
-    private let _t: () -> ItemProtocol
-
-    var t: ItemProtocol { return _t() }
-
-    init<T: ItemProtocol>(_ base: SearchResult<T>) {
-        _t = { base.t }
-    }
-}
-
 struct ContentView: View {
     
-    @State var searchResults = [AnySearchResult]()
+    @State var searchResults = [SearchResult<AnyItem>]()
     
     var body: some View {
         
@@ -57,7 +47,7 @@ struct ContentView: View {
             }
         }
         
-        Button("Clear Results", action: { self.searchResults = [AnySearchResult]() })
+        Button("Clear Results", action: { self.searchResults = [SearchResult]() })
         
     }
     
@@ -66,7 +56,7 @@ struct ContentView: View {
         self.searchResults = SearchResults.generateSearchResults()
     }
     
-    func handleTap(result: AnySearchResult)
+    func handleTap<T: ItemProtocol>(result: SearchResult<T>)
     {
         if let folder = result.t as? Folder
         {
@@ -84,7 +74,7 @@ struct ContentView: View {
         getItemType(result)
     }
     
-    func getItemType(_ result: AnySearchResult)
+    func getItemType<T: ItemProtocol>(_ result: SearchResult<T>)
     {
         if let sharedFolder = result.t as? SharedFolder
         {
