@@ -10,6 +10,12 @@ import Foundation
 protocol ItemProtocol: Identifiable {
     var name: String { get }
 }
+protocol FolderProtocol: ItemProtocol {
+    var numberOfChildren: Int { get }
+}
+protocol FileProtocol: ItemProtocol {
+    var ext: String { get }
+}
 
 class AnyItem: ItemProtocol
 {
@@ -22,9 +28,14 @@ class AnyItem: ItemProtocol
     }
 }
 
-class Folder: AnyItem {
+class Folder: AnyItem, FolderProtocol {
     
     var numberOfChildren: Int
+    
+    convenience init<T: FolderProtocol>(_ base: T)
+    {
+        self.init(name: base.name, numberOfChildren: base.numberOfChildren)
+    }
     
     init(name: String, numberOfChildren: Int)
     {
@@ -34,9 +45,14 @@ class Folder: AnyItem {
     
 }
 
-class File: AnyItem {
+class File: AnyItem, FileProtocol {
     
     var ext: String
+    
+    convenience init<T: FileProtocol>(_ base: T)
+    {
+        self.init(name: base.name, ext: base.ext)
+    }
     
     init(name: String, ext: String)
     {
@@ -56,6 +72,18 @@ extension NSDictionary: ItemProtocol
 {
     var name: String {
         self.stringForKey("NAME")!
+    }
+}
+extension NSDictionary: FolderProtocol
+{
+    var numberOfChildren: Int {
+        Int(self.stringForKey("NUMBER_OF_CHILDREN")!)!
+    }
+}
+extension NSDictionary: FileProtocol
+{
+    var ext: String {
+        self.stringForKey("EXT")!
     }
 }
 

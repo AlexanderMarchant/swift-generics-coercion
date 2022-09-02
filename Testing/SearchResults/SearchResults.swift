@@ -13,7 +13,6 @@ class SearchResults
     {
         var results = [SearchResult<T>]()
         
-        // MARK: Don't think this will work, believe a crash will occur due to casting to 'T'
         results.append(
             SearchResult<T>(
                 t: SharedFolder(name: "Shared", numberOfChildren: 5, shareId: UUID(), sharedTo: ["Alex", "Ernesto"]) as! T
@@ -35,6 +34,18 @@ class SearchResults
         results.append(
             SearchResult<T>(
                 t: ImageFile(name: "Image", ext: "png", imageData: Data()) as! T
+            )
+        )
+        
+        results.append(
+            SearchResult<T>(
+                t: (Folder(NSDictionary(dictionary: NSDictionary(dictionary: ["NAME" : "NSDict-Folder", "NUMBER_OF_CHILDREN" : "1"])))) as! T
+            )
+        )
+        
+        results.append(
+            SearchResult<T>(
+                t: (File(NSDictionary(dictionary: NSDictionary(dictionary: ["NAME" : "NSDict-File", "EXT" : "dict"])))) as! T
             )
         )
         
